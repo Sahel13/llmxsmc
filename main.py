@@ -4,7 +4,7 @@ from typing import List
 from pessimist import sampler
 import argparse
 
-# === Argument Parsing ===
+# === Command line arguments ===
 parser = argparse.ArgumentParser(
     description="Generate tragic sentences using SMC-steering."
 )
@@ -14,13 +14,12 @@ parser.add_argument(
 parser.add_argument(
     "--num_tokens", type=int, required=True, help="The number of tokens to generate."
 )
+parser.add_argument(
+    "--seed", type=int, default=0, help="The random seed for reproducibility."
+)
 args = parser.parse_args()
 
-# Set the seed
-seed = 0
-torch.manual_seed(seed)
-if torch.cuda.is_available():
-    torch.cuda.manual_seed_all(seed)
+torch.manual_seed(args.seed)
 
 # === Config ===
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -53,7 +52,7 @@ def reward_fn(texts: List[str]) -> torch.Tensor:
     return torch.tensor(rewards).to(device)
 
 
-# === Initialize particles ===
+# Run the sampler
 input_ids = gpt2_tokenizer(prompt, return_tensors="pt")["input_ids"].to(device)
 input_ids = torch.tile(input_ids, (num_particles, 1))
 outputs, weights = sampler(
@@ -67,7 +66,7 @@ outputs, weights = sampler(
     device,
 )
 
-# Output the trajectory with the highest weight.
+# Output the trajectory with the highest weight
 best_idx = torch.argmax(weights)
 best_output = outputs[best_idx]
 print("\nModel output: ", best_output)
