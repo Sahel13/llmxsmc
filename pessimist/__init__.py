@@ -1,1 +1,1 @@
-from .smc_sampler import generate
+from .smc import sampler
