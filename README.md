@@ -13,7 +13,11 @@ pip install -e .
 ## Usage
 
 ```bash
-python main.py --prompt "When the prince came home, he saw" --num_tokens 30
+python main.py --prompt "When the prince came home, he saw" --num_tokens 30 --seed 15
+```
+
+```plaintext
+Model output: When the prince came home, he saw everyone weeping. He asked his mother “why are our people sad?” His mother told him noblemen had been killed and cities burned. The prince
 ```
 
 ## References

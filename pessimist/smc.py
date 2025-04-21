@@ -12,7 +12,7 @@ def sampler(
     num_particles: int,
     tempering: float,
     num_tokens: int,
-    device: torch.device,
+    device: str,
 ) -> Tuple[List[str], torch.Tensor]:
     """Samples from the model using the provided parameters."""
     # Initialize particles

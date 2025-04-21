@@ -27,10 +27,11 @@ num_particles = 50
 num_tokens = args.num_tokens
 prompt = args.prompt
 
-# === GPT-2 setup ===
-gpt2_tokenizer = AutoTokenizer.from_pretrained("gpt2")
-gpt2_model = AutoModelForCausalLM.from_pretrained("gpt2").to(device)
-gpt2_model.eval()
+# === LLM setup ===
+model_name = "tiiuae/falcon-7b"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", torch_dtype=torch.float16)
+model.eval()
 
 # === Reward model ===
 classifier = pipeline(
@@ -53,11 +54,11 @@ def reward_fn(texts: List[str]) -> torch.Tensor:
 
 
 # Run the sampler
-input_ids = gpt2_tokenizer(prompt, return_tensors="pt")["input_ids"].to(device)
+input_ids = tokenizer(prompt, return_tensors="pt")["input_ids"].to(device)
 input_ids = torch.tile(input_ids, (num_particles, 1))
 outputs, weights = sampler(
-    gpt2_model,
-    gpt2_tokenizer,
+    model,
+    tokenizer,
     reward_fn,
     prompt,
     num_particles,
