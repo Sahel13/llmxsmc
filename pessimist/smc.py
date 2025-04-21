@@ -1,7 +1,8 @@
 import torch
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 from collections.abc import Callable
 from transformers import PreTrainedModel, PreTrainedTokenizer
+from pessimist.utils import ess, systematic_resampling
 
 
 def sampler(
@@ -20,7 +21,7 @@ def sampler(
     input_ids = torch.tile(input_ids, (num_particles, 1))
 
     log_weights = torch.zeros(num_particles, dtype=torch.float32, device=device)
-    weights = torch.softmax(log_weights, dim=0)
+    weights = torch.ones(num_particles, dtype=torch.float32, device=device) / num_particles
     resampling_indices = torch.arange(num_particles, dtype=torch.int32, device=device)
 
     for _ in range(num_tokens):
@@ -38,7 +39,6 @@ def sampler(
         log_weights += log_potential_fn(reward_fn, texts, tempering)
         weights = torch.softmax(log_weights, dim=0)
 
-    weights = torch.softmax(log_weights, dim=0)
     return texts, weights
 
 
@@ -59,27 +59,3 @@ def log_potential_fn(
     """The log potential function that computes the reward for each text."""
     rewards = reward_fn(texts)
     return rewards * tempering
-
-
-def ess(log_weights: torch.Tensor) -> torch.Tensor:
-    """Computes the effective sample size."""
-    log_ess = 2 * torch.logsumexp(log_weights, 0) - torch.logsumexp(2 * log_weights, 0)
-    return torch.exp(log_ess)
-
-
-def systematic_resampling(
-    weights: torch.Tensor, num_samples: Optional[int] = None
-) -> torch.Tensor:
-    """Perform systematic resampling of particles based on their weights."""
-    device = weights.device
-    n = weights.shape[0]
-    if num_samples is None:
-        num_samples = n
-
-    u = torch.rand(1, device=device)
-    cumsum = torch.cumsum(weights, dim=0)
-    linspace = (
-        torch.arange(num_samples, dtype=weights.dtype, device=device) + u
-    ) / num_samples
-    indices = torch.searchsorted(cumsum, linspace, out_int32=True)
-    return torch.clamp(indices, max=n - 1)
