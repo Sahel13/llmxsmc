@@ -1,10 +1,12 @@
 # pessimist
 
-An attempt to use sequential Monte Carlo for inference-time alignment of large language models. The goal is to steer the model to generate tragic sentences given a prompt.
+Inference-time alignment of large language models using sequential Monte Carlo.
 
-**Note**: This is a work in progress and not yet fully functional.
+Given a prompt, the goal is to generate the saddest completion possible. This is a variation of the toxic story generation task in [2].
 
 ## Installation
+
+Create a Python virtual environment (I'm using Python 3.12) and run
 
 ```bash
 pip install -e .
@@ -13,11 +15,11 @@ pip install -e .
 ## Usage
 
 ```bash
-python main.py --prompt "When the prince came home, he saw" --num_tokens 30 --seed 15
+python generate.py --prompt "When the prince came home, he saw" --num_tokens 30 --seed 15
 ```
 
 ```plaintext
-Model output: When the prince came home, he saw everyone weeping. He asked his mother “why are our people sad?” His mother told him noblemen had been killed and cities burned. The prince
+Model output:  When the prince came home, he saw the sad family sitting by the stove. He felt very sad too. He had lost his rare treasure box and now it was gone forever.
 ```
 
 ## References
