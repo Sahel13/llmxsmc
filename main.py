@@ -28,9 +28,8 @@ num_tokens = args.num_tokens
 prompt = args.prompt
 
 # === LLM setup ===
-model_name = "tiiuae/falcon-7b"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", torch_dtype=torch.float16)
+tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-125M")
+model = AutoModelForCausalLM.from_pretrained("roneneldan/TinyStories-33M").to(device)
 model.eval()
 
 # === Reward model ===

@@ -9,5 +9,4 @@ authors = [{name = "Sahel Iqbal", email = "sahel13miqbal@proton.me"}]
 dependencies = [
   "torch",
   "transformers",
-  "accelerate",
 ]
