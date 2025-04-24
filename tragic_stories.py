@@ -1,7 +1,7 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from typing import List
-from pessimist import sampler
+from llmxsmc import sampler
 import argparse
 
 # === Command line arguments ===

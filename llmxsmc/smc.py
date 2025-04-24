@@ -2,7 +2,7 @@ import torch
 from typing import List, Tuple
 from collections.abc import Callable
 from transformers import PreTrainedModel, PreTrainedTokenizer
-from pessimist.utils import ess, systematic_resampling
+from llmxsmc.utils import ess, systematic_resampling
 
 
 def sampler(
@@ -21,7 +21,9 @@ def sampler(
     input_ids = torch.tile(input_ids, (num_particles, 1))
 
     log_weights = torch.zeros(num_particles, dtype=torch.float32, device=device)
-    weights = torch.ones(num_particles, dtype=torch.float32, device=device) / num_particles
+    weights = (
+        torch.ones(num_particles, dtype=torch.float32, device=device) / num_particles
+    )
     resampling_indices = torch.arange(num_particles, dtype=torch.int32, device=device)
 
     for _ in range(num_tokens):
