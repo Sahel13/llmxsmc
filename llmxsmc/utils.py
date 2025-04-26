@@ -1,5 +1,6 @@
-import torch
 from typing import Optional
+
+import torch
 
 
 def ess(log_weights: torch.Tensor) -> torch.Tensor:

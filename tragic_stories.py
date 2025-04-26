@@ -1,8 +1,10 @@
+import argparse
+from typing import List
+
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
-from typing import List
+
 from llmxsmc import sampler
-import argparse
 
 # === Command line arguments ===
 parser = argparse.ArgumentParser(

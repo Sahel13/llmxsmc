@@ -1,14 +1,16 @@
-import torch
 from typing import List, Tuple
-from collections.abc import Callable
+
+import torch
 from transformers import PreTrainedModel, PreTrainedTokenizer
+
+from llmxsmc.types import RewardFn
 from llmxsmc.utils import ess, systematic_resampling
 
 
 def sampler(
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
-    reward_fn: Callable,
+    reward_fn: RewardFn,
     prompt: str,
     num_particles: int,
     tempering: float,
@@ -56,7 +58,7 @@ def mutate_fn(model: PreTrainedModel, input_ids: torch.Tensor) -> torch.Tensor:
 
 
 def log_potential_fn(
-    reward_fn: Callable, texts: List[str], tempering: float = 1.0
+    reward_fn: RewardFn, texts: List[str], tempering: float = 1.0
 ) -> torch.Tensor:
     """The log potential function that computes the reward for each text."""
     rewards = reward_fn(texts)
