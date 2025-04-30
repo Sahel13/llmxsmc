@@ -1,1 +1,1 @@
-from .smc import sampler
+from .smc import smc

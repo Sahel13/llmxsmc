@@ -7,7 +7,7 @@ from llmxsmc.types import RewardFn
 from llmxsmc.utils import ess, systematic_resampling
 
 
-def sampler(
+def smc(
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
     reward_fn: RewardFn,
@@ -17,7 +17,7 @@ def sampler(
     num_tokens: int,
     device: str,
 ) -> Tuple[List[str], torch.Tensor]:
-    """Samples from the model using the provided parameters."""
+    """Sequential Monte Carlo (SMC) for text generation."""
     # Initialize particles
     input_ids = tokenizer(prompt, return_tensors="pt")["input_ids"].to(device)
     input_ids = torch.tile(input_ids, (num_particles, 1))

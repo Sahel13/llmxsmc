@@ -4,7 +4,7 @@ from typing import List
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
-from llmxsmc import sampler
+from llmxsmc import smc
 
 # === Command line arguments ===
 parser = argparse.ArgumentParser(
@@ -57,7 +57,7 @@ def reward_fn(texts: List[str]) -> torch.Tensor:
 # Run the sampler
 input_ids = tokenizer(prompt, return_tensors="pt")["input_ids"].to(device)
 input_ids = torch.tile(input_ids, (num_particles, 1))
-outputs, weights = sampler(
+outputs, weights = smc(
     model,
     tokenizer,
     reward_fn,
